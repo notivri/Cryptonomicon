@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref, onMounted, computed } from 'vue';
 import closeButton from '@/icons/closeButton.vue';
 
 const props = defineProps({
@@ -13,12 +13,34 @@ const props = defineProps({
   },
 });
 
-function normalizedGraph() {
+const maxColumns = ref(32); // Максимальное количество столбцов
+const columnWidth = ref('2rem'); // Начальная ширина столбца
+
+const normalizedGraph = computed(() => {
   const maxValue = Math.max(...props.graphData);
   const minValue = Math.min(...props.graphData);
 
   return props.graphData.map((value) => ((value - minValue) * 100) / (maxValue - minValue));
+});
+
+function updateColumnWidth() {
+  const screenWidth = window.innerWidth;
+  if (screenWidth < 768) {
+    maxColumns.value = 15;
+    columnWidth.value = '1rem';
+  } else if (screenWidth < 1024) {
+    maxColumns.value = 24;
+    columnWidth.value = '1.5rem';
+  } else {
+    maxColumns.value = 32;
+    columnWidth.value = '2rem';
+  }
 }
+
+onMounted(() => {
+  updateColumnWidth();
+  window.addEventListener('resize', updateColumnWidth);
+});
 </script>
 
 <template>
@@ -30,7 +52,8 @@ function normalizedGraph() {
       </button>
     </div>
     <div class="graph">
-      <div v-for="(bar, idx) in normalizedGraph()" :key="idx" class="bar" :style="{ height: bar + '%' }"></div>
+      <div v-for="(bar, idx) in normalizedGraph" :key="idx" class="bar"
+        :style="{ height: bar + '%', width: columnWidth }"></div>
     </div>
   </div>
 </template>
@@ -68,17 +91,15 @@ function normalizedGraph() {
     align-items: flex-end;
     min-height: 15rem;
     gap: 0.3rem;
-    width: 100%;
-    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
     padding: 0.2rem;
     height: 20rem;
+  }
 
-    & .bar {
-      width: 20rem;
-      max-width: 2rem;
-      min-height: 0.5rem;
-      background-color: black;
-    }
+  & .bar {
+    min-height: 0.5rem;
+    background-color: rgba(85, 60, 154, 1);
   }
 }
 </style>
