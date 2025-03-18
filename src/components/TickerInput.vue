@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import addIcon from '@/icons/addIcon.vue'
 
 const emit = defineEmits(['addTicker'])

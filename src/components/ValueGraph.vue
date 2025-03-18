@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps, ref, onMounted, computed } from 'vue';
 import closeButton from '@/icons/closeButton.vue';
 
 const props = defineProps({
@@ -13,34 +12,12 @@ const props = defineProps({
   },
 });
 
-const maxColumns = ref(32); // Максимальное количество столбцов
-const columnWidth = ref('2rem'); // Начальная ширина столбца
-
-const normalizedGraph = computed(() => {
+function normalizedGraph() {
   const maxValue = Math.max(...props.graphData);
   const minValue = Math.min(...props.graphData);
 
   return props.graphData.map((value) => ((value - minValue) * 100) / (maxValue - minValue));
-});
-
-function updateColumnWidth() {
-  const screenWidth = window.innerWidth;
-  if (screenWidth < 768) {
-    maxColumns.value = 15;
-    columnWidth.value = '1rem';
-  } else if (screenWidth < 1024) {
-    maxColumns.value = 24;
-    columnWidth.value = '1.5rem';
-  } else {
-    maxColumns.value = 32;
-    columnWidth.value = '2rem';
-  }
 }
-
-onMounted(() => {
-  updateColumnWidth();
-  window.addEventListener('resize', updateColumnWidth);
-});
 </script>
 
 <template>
