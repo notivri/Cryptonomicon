@@ -51,6 +51,7 @@ import deleteIcon from '@/app/icons/deleteIcon.vue';
     font-weight: 600;
     width: 100%;
     margin-bottom: 0.5rem;
+    transition: 0.2s background-color;
 
     &:hover {
       background-color: rgb(228, 228, 228);

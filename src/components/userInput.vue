@@ -40,6 +40,11 @@ import addIcon from '../app/icons/addIcon.vue';
   padding-right: 1rem;
   padding-left: 1rem;
   border-radius: 2rem;
+  transition: 0.2s background-color;
+
+  &:hover {
+    background-color: #5d6b83;
+  }
 }
 
 .ticker-container {
