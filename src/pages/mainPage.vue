@@ -29,7 +29,7 @@ async function getTickerData(ticker) {
     if (selectedTicker.value && selectedTicker.value.name == ticker.name) {
       graphData.value.push(tickerValue);
 
-      if (graphData.value.length > 20) {
+      if (graphData.value.length > selectedTicker.value.maxColumns) {
         graphData.value.shift();
       }
     }
@@ -44,7 +44,7 @@ function updateTickers() {
       getTickerData(ticker);
     });
 
-    setTimeout(updateTickers, 5000);
+    setTimeout(updateTickers, 7000);
   }
 }
 
@@ -78,6 +78,7 @@ function handleDeleteTicker(ticker) {
 
 function handleSelectTicker(ticker) {
   selectedTicker.value = ticker;
+  selectedTicker.value.maxColumns = 32;
   graphData.value = [];
 }
 
@@ -111,13 +112,13 @@ function handleCloseGraph() {
   justify-content: center;
   background-color: whitesmoke;
   margin: auto;
-  max-width: 50rem;
+  max-width: 75rem;
   padding: 1rem;
 }
 
 .ticker-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
   gap: 1rem;
   place-items: center
 }

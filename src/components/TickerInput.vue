@@ -43,6 +43,7 @@ function selectLastItem(item) {
   align-items: start;
   gap: 0.5rem;
 
+
   & label {
     color: rgba(0, 0, 0, 0.767);
     font-weight: 500;
@@ -75,9 +76,11 @@ function selectLastItem(item) {
 
   & span {
     background-color: rgb(232, 243, 253);
+    color: rgba(45, 55, 72, 1);
     border-radius: 0.375rem;
-    padding: 0.1rem 0.5rem;
+    padding: 0.2rem 0.5rem;
     cursor: pointer;
+    font-size: 0.75rem;
     font-weight: 500;
     transition: 0.2s background-color;
 
@@ -92,7 +95,8 @@ function selectLastItem(item) {
   display: flex;
   align-items: center;
   color: white;
-  background-color: #4a5568;
+  background-color: rgba(74, 85, 104, 1);
+  font-weight: 500;
   gap: 0.5rem;
   margin: 1rem 1rem 0 0;
   padding: 0.5rem 1rem;

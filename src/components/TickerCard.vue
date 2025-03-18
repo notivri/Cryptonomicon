@@ -47,17 +47,42 @@ function handleDelete() {
   border-radius: 0.375rem;
   margin: 0.5rem;
   padding-bottom: 0.5rem;
-  width: 15rem;
+  width: 20rem;
+  cursor: pointer;
 
   & .card-header {
     display: flex;
     flex-direction: column;
     padding: 2rem;
     gap: 1rem;
+
+    & dt {
+      color: rgba(0, 0, 0, 0.418);
+      font-size: 0.5;
+      font-weight: 700;
+    }
+
+    & dd {
+      font-size: 2rem;
+      font-weight: 500;
+    }
+
+    @media (width: 400px) {
+      max-width: 400px;
+    }
   }
 
   &.selected {
-    outline: 4px solid purple;
+    overflow: hidden;
+    outline: 0.3rem solid rgba(85, 60, 154, 1);
+
+    &&::before ::after {
+      box-sizing: border-box;
+    }
+  }
+
+  @media (max-width: 600px) {
+    width: 30rem;
   }
 }
 
