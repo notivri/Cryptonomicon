@@ -68,8 +68,6 @@ function normalizedGraph() {
     align-items: flex-end;
     min-height: 15rem;
     gap: 0.3rem;
-    overflow-x: auto;
-    overflow-y: hidden;
     padding: 0.2rem;
     height: 20rem;
   }
