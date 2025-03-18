@@ -1,25 +1,32 @@
 <script setup>
-import { ref, } from 'vue';
+import { ref } from 'vue';
 import TickerInput from '@/components/TickerInput.vue';
 import TickerCard from '@/components/TickerCard.vue';
 import ValueGraph from '@/components/ValueGraph.vue';
+
+const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
 
 let id = 0;
 const tickers = ref([]);
 const selectedTicker = ref(null);
 const graphData = ref([]);
 
-const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
-
-async function getTickerInfo(ticker) {
+async function getTickerData(ticker) {
   try {
     const response = await fetch(`https://data-api.coindesk.com/index/cc/v1/latest/tick?market=ccix&instruments=${ticker.name}-USD&api_key=${apiKey}`);
+
+    if (response.status == 404) {
+      alert(`${ticker.name} не найден!`)
+      tickers.value = tickers.value.filter((toDeleteTicker) => ticker != toDeleteTicker)
+      return
+    }
+
     const data = await response.json();
-    const tickerValue = data.Data[ticker.name + '-USD'].VALUE;
+    const tickerValue = data.Data[`${ticker.name}-USD`].VALUE;
 
     ticker.price = tickerValue > 2 ? tickerValue.toFixed(2) : tickerValue.toPrecision(2);
 
-    if (selectedTicker.value && selectedTicker.value.name === ticker.name) { /* AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA */
+    if (selectedTicker.value && selectedTicker.value.name == ticker.name) {
       graphData.value.push(tickerValue);
 
       if (graphData.value.length > 20) {
@@ -27,13 +34,18 @@ async function getTickerInfo(ticker) {
       }
     }
   } catch (err) {
-    console.error('API error ' + err);
+    console.error('API error: ', err);
   }
 }
 
-async function updateTicker(ticker) {
-  await getTickerInfo(ticker);
-  setTimeout(() => updateTicker(ticker), 5000);
+function updateTickers() {
+  if (tickers.value.length > 0) {
+    tickers.value.forEach(ticker => {
+      getTickerData(ticker);
+    });
+
+    setTimeout(updateTickers, 5000);
+  }
 }
 
 function handleAddTicker(tickerName) {
@@ -42,20 +54,31 @@ function handleAddTicker(tickerName) {
     return;
   }
 
-  const newTicker = ref({ id: id++, name: tickerName, price: '-' });
-  tickers.value.push(newTicker.value);
+  const newTicker = {
+    id: id++,
+    name: tickerName,
+    price: '-'
+  };
 
-  updateTicker(newTicker.value);
+  tickers.value.push(newTicker);
+
+  if (tickers.value.length === 1) {
+    updateTickers();
+  }
 }
 
 function handleDeleteTicker(ticker) {
   tickers.value = tickers.value.filter((toDeleteTicker) => ticker !== toDeleteTicker);
+
+  if (tickers.value.length === 0) {
+    selectedTicker.value = null;
+    graphData.value = [];
+  }
 }
 
 function handleSelectTicker(ticker) {
   selectedTicker.value = ticker;
   graphData.value = [];
-  getTickerInfo(ticker);
 }
 
 function handleCloseGraph() {
