@@ -65,16 +65,20 @@ function normalizedGraph() {
     margin-top: 1rem;
     display: flex;
     align-items: flex-end;
-    min-height: 15rem;
     gap: 0.3rem;
     padding: 0.2rem;
     height: 20rem;
-  }
+    max-width: 100%;
+    overflow-x: hidden;
 
-  & .bar {
-    min-width: 5rem;
-    min-height: 0.5rem;
-    background-color: rgba(85, 60, 154, 1);
+    & .bar {
+      display: flex;
+      flex-wrap: nowrap;
+      min-width: 2rem;
+      max-width: calc(100% / 10);
+      min-height: 0.5rem;
+      background-color: rgba(85, 60, 154, 1);
+    }
   }
 }
 </style>

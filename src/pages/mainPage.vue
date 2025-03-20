@@ -21,8 +21,6 @@ async function getTickerData(ticker) {
       return
     }
 
-    console.log(graphData.value)
-
     const data = await response.json();
     const tickerValue = data.Data[`${ticker.name}-USD`].VALUE;
 
