@@ -1,5 +1,5 @@
 <script setup>
-import deleteIcon from '@/icons/deleteIcon.vue'
+import deleteIcon from './icons/deleteIcon.vue'
 
 const props = defineProps({
   ticker: {

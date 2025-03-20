@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
-import TickerInput from '@/components/TickerInput.vue';
-import TickerCard from '@/components/TickerCard.vue';
-import ValueGraph from '@/components/ValueGraph.vue';
+import tickerInput from '@/widgets/TickerInput/tickerInput.vue';
+import tickerCard from '@/widgets/TickerCard/tickerCard.vue';
+import valueGraph from '@/widgets/valueGraph/valueGraph.vue';
 
 const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
 

@@ -1,5 +1,5 @@
 <script setup>
-import closeButton from '@/icons/closeButton.vue';
+import closeButton from './icons/closeButton.vue';
 
 const props = defineProps({
   graphData: {
