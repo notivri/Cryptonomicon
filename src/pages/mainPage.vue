@@ -21,6 +21,8 @@ async function getTickerData(ticker) {
       return
     }
 
+    console.log(graphData.value)
+
     const data = await response.json();
     const tickerValue = data.Data[`${ticker.name}-USD`].VALUE;
 
@@ -28,10 +30,6 @@ async function getTickerData(ticker) {
 
     if (selectedTicker.value && selectedTicker.value.name == ticker.name) {
       graphData.value.push(tickerValue);
-
-      if (graphData.value.length > selectedTicker.value.maxColumns) {
-        graphData.value.shift();
-      }
     }
   } catch (err) {
     console.error('API error: ', err);
@@ -70,7 +68,7 @@ function handleAddTicker(tickerName) {
 function handleDeleteTicker(ticker) {
   tickers.value = tickers.value.filter((toDeleteTicker) => ticker !== toDeleteTicker);
 
-  if (tickers.value.length === 0) {
+  if (tickers.value.length == 0) {
     selectedTicker.value = null;
     graphData.value = [];
   }
@@ -78,7 +76,6 @@ function handleDeleteTicker(ticker) {
 
 function handleSelectTicker(ticker) {
   selectedTicker.value = ticker;
-  selectedTicker.value.maxColumns = 32;
   graphData.value = [];
 }
 
@@ -101,8 +98,7 @@ function handleCloseGraph() {
       <hr style="margin: 1rem;" />
     </div>
 
-    <value-graph v-if="selectedTicker" :tickerName="selectedTicker.name" :graphData="graphData"
-      @close="handleCloseGraph" />
+    <value-graph v-if="selectedTicker" :tickerName="selectedTicker.name" :graphData @close="handleCloseGraph" />
   </div>
 </template>
 

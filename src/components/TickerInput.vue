@@ -1,31 +1,71 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import addIcon from '@/icons/addIcon.vue'
+import LoadingIcon from '@/icons/loadingIcon.vue';
+const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
 
 const emit = defineEmits(['addTicker'])
 const inputValue = ref('')
-
-const lastItems = ['BTC', 'DOGE', 'BCH', 'CHD']
+const loading = ref(false)
+let allSymbols = []
+let suggestion = ref([])
 
 function submitTicker() {
-  if (inputValue.value.trim() === '') return
+  if (inputValue.value === '') return
 
   emit('addTicker', inputValue.value.toUpperCase())
   inputValue.value = ''
 }
 
-function selectLastItem(item) {
-  inputValue.value = item
+const selectLastItem = (item) => {
+  inputValue.value = item;
+  submitTicker()
 }
+
+watch(inputValue, (newInput) => {
+  if (!newInput) {
+    suggestion.value = []
+    return
+  }
+
+  suggestion.value = allSymbols
+    .map(s => s.SYMBOL)
+    .filter(symbol => symbol.startsWith(newInput.toUpperCase()))
+    .slice(0, 4)
+})
+
+
+onMounted(async () => {
+  try {
+    loading.value = true
+
+    const response = await fetch(`https://data-api.coindesk.com/asset/v1/summary/list?asset_lookup_priority=SYMBOL&api_key=${apiKey}`)
+    const data = await response.json()
+
+    allSymbols = data.Data.LIST
+  }
+  catch (err) {
+    console.log('API Error! ' + err)
+  }
+  finally {
+    loading.value = false
+  }
+})
 </script>
 
 <template>
+  <template v-if="loading">
+    <div class="loadingScreen">
+      <LoadingIcon class="loadingIcon" />
+    </div>
+  </template>
   <div style="display: inline-block;">
     <div class="ticker-input-container">
       <label for="tickerInput">Тикер</label>
-      <input id="tickerInput" v-model="inputValue" @keydown.enter="submitTicker" type="text" placeholder="Код валюты" />
-      <div class="last-items">
-        <span v-for="item in lastItems" :key="item" @click="selectLastItem(item)">{{ item }}</span>
+      <input id="tickerInput" v-model.trim="inputValue" @keydown.enter="submitTicker" type="text"
+        placeholder="Код валюты" autocomplete="off" />
+      <div class="suggestions">
+        <span v-for="item in suggestion" :key="item" @click="selectLastItem(item)">{{ item }}</span>
       </div>
       <button @click="submitTicker" class="add-button">
         <add-icon /> Добавить
@@ -60,12 +100,12 @@ function selectLastItem(item) {
   }
 }
 
-.last-items {
+.suggestions {
   z-index: 1;
   display: flex;
   width: 100%;
   position: relative;
-  justify-content: space-between;
+  justify-content: flex-start;
   background-color: white;
   gap: 0.5rem;
   border-radius: 0 0 0.375rem 0.375rem;
@@ -106,6 +146,33 @@ function selectLastItem(item) {
 
   &:hover {
     background-color: #5d6b83;
+  }
+}
+
+.loadingScreen {
+  z-index: 100;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(85, 60, 154, 1);
+
+  & .loadingIcon {
+    animation: 1s linear 0s infinite normal none running loading;
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(+360deg);
   }
 }
 </style>

@@ -29,8 +29,7 @@ function normalizedGraph() {
       </button>
     </div>
     <div class="graph">
-      <div v-for="(bar, idx) in normalizedGraph" :key="idx" class="bar"
-        :style="{ height: bar + '%', width: columnWidth }"></div>
+      <div v-for="(bar, idx) in normalizedGraph()" :key="idx" class="bar" :style="{ height: bar + '%' }"></div>
     </div>
   </div>
 </template>
@@ -73,6 +72,7 @@ function normalizedGraph() {
   }
 
   & .bar {
+    min-width: 5rem;
     min-height: 0.5rem;
     background-color: rgba(85, 60, 154, 1);
   }
