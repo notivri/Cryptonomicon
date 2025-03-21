@@ -63,7 +63,7 @@ onMounted(async () => {
 
 <template>
   <LoadingScreen v-if="loading" />
-  <div style="display: inline-block;">
+  <div style="display: inline-flex; flex-direction: column">
     <div class="ticker-input-container">
       <label for="tickerInput">Тикер</label>
       <input id="tickerInput" v-model.trim="inputValue" @keydown.enter="submitTicker" type="text"
@@ -98,7 +98,8 @@ onMounted(async () => {
 
   & input {
     all: unset;
-    width: 100%;
+    min-width: 15rem;
+    max-width: 20rem;
     z-index: 2;
     padding: 0.5rem;
     background-color: white;

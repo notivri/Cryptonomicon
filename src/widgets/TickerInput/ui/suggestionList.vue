@@ -17,7 +17,7 @@ const emit = defineEmits(['select']);
 .suggestions {
   z-index: 1;
   display: flex;
-  width: 100%;
+  min-width: 15rem;
   position: relative;
   justify-content: flex-start;
   background-color: white;
