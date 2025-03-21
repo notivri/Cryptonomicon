@@ -1,18 +1,38 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import addIcon from '../icons/addIcon.vue';
 import suggestionList from './suggestionList.vue';
 import LoadingScreen from './loadingScreen.vue';
 
+const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
+
+const props = defineProps({
+  tickers: {
+    type: Array,
+    required: true
+  }
+})
 const emit = defineEmits(['addTicker']);
+
 const inputValue = ref('');
 const loading = ref(false);
+const alreadyExist = ref(false)
+
 let allSymbols = [];
-let suggestion = ref([]);
-const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
+let suggestion = computed(() => {
+  if (!inputValue.value) return []
+
+  return allSymbols.map((item) => item.SYMBOL).filter((item) => item.startsWith(inputValue.value.toUpperCase())).slice(0, 4)
+})
 
 function submitTicker() {
   if (inputValue.value === '') return;
+
+  if (props.tickers.find(ticker => ticker.name === inputValue.value.toUpperCase())) {
+    alreadyExist.value = true
+    return
+  }
+
   emit('addTicker', inputValue.value.toUpperCase());
   inputValue.value = '';
 }
@@ -22,17 +42,7 @@ const selectLastItem = (item) => {
   submitTicker();
 };
 
-watch(inputValue, (newInput) => {
-  if (!newInput) {
-    suggestion.value = [];
-    return;
-  }
-
-  suggestion.value = allSymbols
-    .map((s) => s.SYMBOL)
-    .filter((symbol) => symbol.startsWith(newInput.toUpperCase()))
-    .slice(0, 4);
-});
+watch(inputValue, () => alreadyExist.value = false)
 
 onMounted(async () => {
   try {
@@ -41,6 +51,7 @@ onMounted(async () => {
       `https://data-api.coindesk.com/asset/v1/summary/list?asset_lookup_priority=SYMBOL&api_key=${apiKey}`
     );
     const data = await response.json();
+
     allSymbols = data.Data.LIST;
   } catch (err) {
     console.log('API Error! ' + err);
@@ -56,8 +67,9 @@ onMounted(async () => {
     <div class="ticker-input-container">
       <label for="tickerInput">Тикер</label>
       <input id="tickerInput" v-model.trim="inputValue" @keydown.enter="submitTicker" type="text"
-        placeholder="Код валюты" autocomplete="off" />
+        placeholder="Код валюты" maxlength="15" autocomplete="off" />
       <suggestionList :suggestions="suggestion" @select="selectLastItem" />
+      <span v-if="alreadyExist" class="already-exists">Такой тикер уже существует!</span>
       <button @click="submitTicker" class="add-button">
         <add-icon /> Добавить
       </button>
@@ -78,6 +90,10 @@ onMounted(async () => {
   & label {
     color: rgba(0, 0, 0, 0.767);
     font-weight: 500;
+  }
+
+  & .already-exists {
+    color: red
   }
 
   & input {

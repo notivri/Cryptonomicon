@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import tickerInput from '@/widgets/TickerInput/tickerInput.vue';
 import tickerCard from '@/widgets/TickerCard/tickerCard.vue';
 import valueGraph from '@/widgets/valueGraph/valueGraph.vue';
@@ -45,11 +45,6 @@ function updateTickers() {
 }
 
 function handleAddTicker(tickerName) {
-  if (tickers.value.find(ticker => ticker.name === tickerName)) {
-    alert('Такой тикер уже есть');
-    return;
-  }
-
   const newTicker = {
     id: id++,
     name: tickerName,
@@ -57,6 +52,7 @@ function handleAddTicker(tickerName) {
   };
 
   tickers.value.push(newTicker);
+  localStorage.setItem("cryptonomicon-list", JSON.stringify(tickers.value))
 
   if (tickers.value.length === 1) {
     updateTickers();
@@ -65,6 +61,7 @@ function handleAddTicker(tickerName) {
 
 function handleDeleteTicker(ticker) {
   tickers.value = tickers.value.filter((toDeleteTicker) => ticker !== toDeleteTicker);
+  localStorage.setItem("cryptonomicon-list", JSON.stringify(tickers.value))
 
   if (tickers.value.length == 0) {
     selectedTicker.value = null;
@@ -81,11 +78,20 @@ function handleCloseGraph() {
   selectedTicker.value = null;
   graphData.value = [];
 }
+
+onMounted(() => {
+  const tickersData = localStorage.getItem("cryptonomicon-list")
+
+  if (tickersData) {
+    tickers.value = JSON.parse(tickersData)
+    updateTickers()
+  }
+})
 </script>
 
 <template>
   <div class="main-page">
-    <ticker-input @addTicker="handleAddTicker" />
+    <ticker-input @addTicker="handleAddTicker" :tickers="tickers" />
 
     <div v-if="tickers.length > 0">
       <hr style="margin: 1rem;" />
