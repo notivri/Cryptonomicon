@@ -1,11 +1,10 @@
 <script setup>
 import './styles/main.css'
 import { onMounted, ref, watch } from 'vue';
-import tickerInput from '@/widgets/tickerInput/tickerInput.vue';
-import tickerCards from '@/widgets/tickerCards/tickerCards.vue';
-import TickerGraph from '@/widgets/tickerGraph.vue';
-import BaseInput from '@/shared/ui/baseInput.vue';
-import BaseButton from '@/shared/ui/baseButton.vue';
+import tickerInput from '@/components/tickerInput/tickerInput.vue';
+import tickerCards from '@/components/tickerCards/tickerCards.vue';
+import TickerGraph from '@/components/tickerGraph/tickerGraph.vue';
+import tickerFilter from '@/components/tickerFilter/tickerFilter.vue';
 
 const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
 
@@ -55,7 +54,7 @@ function updateTickers() {
       getTickerData(ticker);
     });
 
-    setTimeout(updateTickers,);
+    setTimeout(updateTickers, 7000);
   }
 }
 
@@ -67,10 +66,17 @@ function handleAddTicker(tickerName) {
 
   tickers.value.push(newTicker);
   filter.value = ''
-  localStorage.setItem("cryptonomicon-list", JSON.stringify(tickers.value))
+  localStorage.setItem("cryptonomicon-list", JSON.stringify(tickers.value));
 
   if (tickers.value.length === 1) {
     updateTickers();
+  }
+
+  const index = tickers.value.findIndex(ticker => ticker.name === tickerName);
+  const newPage = Math.floor(index / 6) + 1;
+
+  if (newPage !== currentPage.value) {
+    currentPage.value = newPage;
   }
 }
 
@@ -120,7 +126,7 @@ onMounted(() => {
   }
 
   if (windowData.page) {
-    currentPage.value = windowData.page
+    currentPage.value = parseInt(windowData.page, 0)
   }
 
   const tickersData = localStorage.getItem("cryptonomicon-list")
@@ -136,20 +142,14 @@ onMounted(() => {
   <div class="main-page">
     <tickerInput @addTicker="handleAddTicker" :tickers="tickers" />
 
-    <hr style="margin: 1rem;" />
-    <div class="filtered-container">
-      <BaseInput type="text" v-model="filter" />
-      <div class="buttons-container">
-        <BaseButton @click="currentPage--" :disabled="currentPage == 1">Назад</BaseButton>
-        <BaseButton @click="currentPage++" :disabled="!hasNextPage">Вперед</BaseButton>
-      </div>
-    </div>
-
-    <template v-if="tickers.length > 0">
-      <hr style="margin: 1rem;" />
+    <hr />
+    <tickerFilter :filter="filter" :currentPage="currentPage" :hasNextPage="hasNextPage"
+      @update:filter="filter = $event" @update:currentPage="currentPage = $event" />
+    <template v-if="filteredTickers().length > 0">
+      <hr />
       <tickerCards @deleteTicker="handleDeleteTicker" @selectTicker="handleSelectTicker" :filteredTickers
         :selectedTicker />
-      <hr style="margin: 1rem;" />
+      <hr />
     </template>
 
     <TickerGraph v-if="selectedTicker" :tickerName="selectedTicker.name" :graphData @closeGraph="handleCloseGraph" />
@@ -177,5 +177,10 @@ onMounted(() => {
     display: flex;
     gap: 0.5rem;
   }
+
+}
+
+hr {
+  margin: 1rem;
 }
 </style>

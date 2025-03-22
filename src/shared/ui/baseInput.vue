@@ -11,7 +11,7 @@ const emits = defineEmits(['update:modelValue']);
 
 <template>
   <input type="text" maxlength="15" autocomplete="off" @input="emits('update:modelValue', $event.target.value)"
-    :value="props.modelValue" v-bind="$attrs" />
+    :value="props.modelValue" />
 </template>
 
 <style scoped>

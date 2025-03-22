@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, nextTick, } from 'vue';
 import addIcon from '@/shared/icons/addIcon.vue';
 import suggestionList from './ui/suggestionList.vue';
 import loadingScreen from './ui/loadingScreen.vue';
@@ -31,10 +31,10 @@ const props = defineProps({
 
 const emit = defineEmits(['addTicker']);
 
-const addTicker = () => {
-  if (userInput.value === '') return;
+const addTicker = async () => {
+  await nextTick()
 
-  if (props.tickers.find(ticker => ticker.name === userInput.value.toUpperCase())) {
+  if (props.tickers.find(ticker => ticker.name == userInput.value.toUpperCase())) {
     isExists.value = true
     return
   }
@@ -47,10 +47,6 @@ const handleSelectSuggestion = (suggest) => {
   userInput.value = suggest
   addTicker()
 }
-
-watch(userInput, () => {
-  isExists.value = false
-})
 
 onMounted(async () => {
   try {
@@ -67,16 +63,22 @@ onMounted(async () => {
     loading.value = false
   }
 });
+
+watch(userInput, () => {
+  isExists.value = false
+})
 </script>
 
 <template>
   <loadingScreen v-if="loading" />
-
   <div class="ticker-input-container">
     <span>Тикер</span>
-    <baseInput v-model.trim="userInput" @keydown.enter="addTicker" placeholder="Код валюты" class="baseInput" />
-    <suggestionList :suggestions @selectSuggestion="handleSelectSuggestion" class="suggestionList" />
-    <span v-if="isExists" class="exists">Такой тикер уже существует!</span>
+    <div class="input-block">
+      <baseInput v-model.trim="userInput" @keydown.enter="addTicker" placeholder="Код валюты" class="baseInput"
+        style="max-width: 100%;" />
+      <suggestionList :suggestions @selectSuggestion="handleSelectSuggestion" class="suggestionList" />
+      <span v-if="isExists" class="exists">Такой тикер уже существует!</span>
+    </div>
     <baseButton class="addButton" @click="addTicker">
       <addIcon /> Добавить
     </baseButton>
@@ -92,6 +94,11 @@ onMounted(async () => {
   align-items: start;
   gap: 0.5rem;
 
+  & .input-block {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 
   & span {
     color: rgba(0, 0, 0, 0.767);

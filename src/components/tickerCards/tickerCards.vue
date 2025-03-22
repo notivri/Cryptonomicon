@@ -7,20 +7,20 @@ const props = defineProps({
     required: true
   },
   selectedTicker: {
-    type: Object,
+    type: [Object, Boolean],
     required: false,
     default: null
   }
 })
 
-const emit = defineEmits(['deleteTicker', 'selectTicker'])
+const emits = defineEmits(['deleteTicker', 'selectTicker'])
 </script>
 
 <template>
   <div class="ticker-grid">
     <TickerCard v-for="ticker in props.filteredTickers()" :key="ticker.name" :ticker="ticker"
-      :selectedTicker="props.selectedTicker === ticker" @select="emit('selectTicker', $event)"
-      @delete="emit('deleteTicker', $event)" />
+      :selectedTicker="props.selectedTicker === ticker" @select="emits('selectTicker', $event)"
+      @delete="emits('deleteTicker', $event)" placeholder='a' />
   </div>
 </template>
 

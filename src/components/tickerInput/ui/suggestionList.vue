@@ -23,14 +23,13 @@ const emits = defineEmits(['selectSuggestion'])
 .suggestions {
   z-index: 1;
   display: flex;
-  min-width: 15rem;
   position: relative;
   justify-content: flex-start;
   background-color: white;
   gap: 0.5rem;
   border-radius: 0 0 0.375rem 0.375rem;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
   margin-top: -2rem;
+  width: 20;
 
   padding: 0.5rem;
   padding-top: 1rem;
@@ -63,6 +62,7 @@ const emits = defineEmits(['selectSuggestion'])
   &.show {
     transform: translate(0, 1rem);
     margin-bottom: 1rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
   }
 }
 </style>

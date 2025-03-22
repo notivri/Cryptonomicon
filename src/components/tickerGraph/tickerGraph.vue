@@ -47,6 +47,12 @@ function normalizedGraph() {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-bottom: 1rem;
+
+    & h3 {
+      font-size: large;
+      font-weight: 600;
+    }
 
     & .close-button {
       all: unset;
