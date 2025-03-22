@@ -1,0 +1,34 @@
+<script setup>
+import TickerCard from './ui/tickerCard.vue';
+
+const props = defineProps({
+  filteredTickers: {
+    type: Function,
+    required: true
+  },
+  selectedTicker: {
+    type: Object,
+    required: false,
+    default: null
+  }
+})
+
+const emit = defineEmits(['deleteTicker', 'selectTicker'])
+</script>
+
+<template>
+  <div class="ticker-grid">
+    <TickerCard v-for="ticker in props.filteredTickers()" :key="ticker.name" :ticker="ticker"
+      :selectedTicker="props.selectedTicker === ticker" @select="emit('selectTicker', $event)"
+      @delete="emit('deleteTicker', $event)" />
+  </div>
+</template>
+
+<style>
+.ticker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1rem;
+  place-items: center;
+}
+</style>

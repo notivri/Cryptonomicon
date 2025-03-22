@@ -1,5 +1,5 @@
 <script setup>
-import loadingIcon from '../icons/loadingIcon.vue';
+import loadingIcon from '@/shared/icons/loadingIcon.vue';
 </script>
 
 <template>
@@ -23,7 +23,7 @@ import loadingIcon from '../icons/loadingIcon.vue';
 }
 
 .loadingIcon {
-  animation: 1s linear infinite loading;
+  animation: loading 1s linear infinite;
 }
 
 @keyframes loading {

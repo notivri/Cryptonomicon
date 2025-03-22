@@ -1,5 +1,5 @@
 <script setup>
-import closeButton from './icons/closeButton.vue';
+import closeButton from '@/shared/icons/closeButton.vue';
 
 const props = defineProps({
   graphData: {
@@ -12,19 +12,23 @@ const props = defineProps({
   },
 });
 
+const emits = defineEmits(['closeGraph'])
+
 function normalizedGraph() {
   const maxValue = Math.max(...props.graphData);
   const minValue = Math.min(...props.graphData);
 
   return props.graphData.map((value) => ((value - minValue) * 100) / (maxValue - minValue));
 }
+
+
 </script>
 
 <template>
   <div class="graph-container">
     <div class="graph-header">
       <h3>{{ tickerName }} - USD</h3>
-      <button @click="$emit('close')" class="close-button">
+      <button @click="emits('closeGraph')" class="close-button">
         <close-button />
       </button>
     </div>
