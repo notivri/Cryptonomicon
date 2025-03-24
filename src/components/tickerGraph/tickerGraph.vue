@@ -21,7 +21,6 @@ function normalizedGraph() {
   return props.graphData.map((value) => ((value - minValue) * 100) / (maxValue - minValue));
 }
 
-
 </script>
 
 <template>
@@ -32,7 +31,7 @@ function normalizedGraph() {
         <close-button />
       </button>
     </div>
-    <div class="graph">
+    <div class="graph" ref="graph">
       <div v-for="(bar, idx) in normalizedGraph()" :key="idx" class="bar" :style="{ height: bar + '%' }"></div>
     </div>
   </div>

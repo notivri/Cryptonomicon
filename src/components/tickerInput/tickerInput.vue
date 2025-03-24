@@ -1,23 +1,21 @@
 <script setup>
-import { ref, computed, watch, nextTick, onBeforeMount, } from 'vue';
+import { ref, computed, watch, nextTick, } from 'vue';
 import addIcon from '@/shared/icons/addIcon.vue';
 import suggestionList from './ui/suggestionList.vue';
 import loadingScreen from './ui/loadingScreen.vue';
 import baseButton from '@/shared/ui/baseButton.vue';
 import baseInput from '@/shared/ui/baseInput.vue';
-import { getSuggestions } from '@/shared/api/api';
+import { loading, allTickers } from '@/entities/ticker';
 
 const userInput = ref('');
 const isExists = ref(false)
-const loading = ref(false)
 
-let allTickers = [];
 const suggestions = computed(() => {
   if (userInput.value == '') {
     return []
   }
 
-  return allTickers.map((item) => Object({ symbol: item.SYMBOL, name: item.NAME, logo: item.LOGO_URL }))
+  return allTickers.value.map((item) => Object({ symbol: item.SYMBOL, name: item.NAME, logo: item.LOGO_URL }))
     .filter((item) => item.symbol.startsWith(userInput.value.toUpperCase()))
     .slice(0, 4)
 })
@@ -47,18 +45,6 @@ const handleSelectSuggestion = (suggest) => {
   userInput.value = suggest
   addTicker()
 }
-
-onBeforeMount(async () => {
-  try {
-    loading.value = true
-
-    const response = await getSuggestions()
-
-    allTickers = response.LIST
-  } finally {
-    loading.value = false
-  }
-});
 
 watch(userInput, () => {
   isExists.value = false
