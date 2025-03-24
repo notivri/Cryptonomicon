@@ -1,11 +1,12 @@
 <script setup>
-import { ref, computed, watch, nextTick, } from 'vue';
+import { ref, computed, watch, nextTick, onBeforeMount, } from 'vue';
 import addIcon from '@/shared/icons/addIcon.vue';
 import suggestionList from './ui/suggestionList.vue';
 import loadingScreen from './ui/loadingScreen.vue';
 import baseButton from '@/shared/ui/baseButton.vue';
 import baseInput from '@/shared/ui/baseInput.vue';
 import { loading, allTickers } from '@/entities/ticker';
+import { getSuggestions } from '@/shared/api/api';
 
 const userInput = ref('');
 const isExists = ref(false)
@@ -15,7 +16,7 @@ const suggestions = computed(() => {
     return []
   }
 
-  return allTickers.value.map((item) => Object({ symbol: item.SYMBOL, name: item.NAME, logo: item.LOGO_URL }))
+  return allTickers.value.LIST.map((item) => Object({ symbol: item.SYMBOL, name: item.NAME, logo: item.LOGO_URL }))
     .filter((item) => item.symbol.startsWith(userInput.value.toUpperCase()))
     .slice(0, 4)
 })
@@ -48,6 +49,10 @@ const handleSelectSuggestion = (suggest) => {
 
 watch(userInput, () => {
   isExists.value = false
+})
+
+onBeforeMount(async () => {
+  allTickers.value = await getSuggestions()
 })
 </script>
 
