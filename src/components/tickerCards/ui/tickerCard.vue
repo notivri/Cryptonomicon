@@ -20,7 +20,7 @@ const emit = defineEmits(['delete', 'select'])
   <div @click="emit('select', ticker)" :class="['ticker-card', { selected: props.selectedTicker }]">
     <div class="card-header">
       <dt>{{ props.ticker.name }} - USD</dt>
-      <dd>{{ props.ticker.price }}</dd>
+      <dd>{{ props.ticker.value }}</dd>
     </div>
     <button @click.stop="emit('delete', props.ticker)" class="delete-button">
       <DeleteIcon /> Удалить

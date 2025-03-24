@@ -1,25 +1,25 @@
 <script setup>
-import { ref, onMounted, computed, watch, nextTick, } from 'vue';
+import { ref, computed, watch, nextTick, onBeforeMount, } from 'vue';
 import addIcon from '@/shared/icons/addIcon.vue';
 import suggestionList from './ui/suggestionList.vue';
 import loadingScreen from './ui/loadingScreen.vue';
 import baseButton from '@/shared/ui/baseButton.vue';
 import baseInput from '@/shared/ui/baseInput.vue';
-
-const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
+import { getSuggestions } from '@/shared/api/api';
 
 const userInput = ref('');
 const isExists = ref(false)
 const loading = ref(false)
-let allSymbols = [];
-let suggestions = computed(() => {
+
+let allTickers = [];
+const suggestions = computed(() => {
   if (userInput.value == '') {
     return []
   }
 
-  return allSymbols.map((item) => {
-    return { symbol: item.SYMBOL, name: item.NAME, logo: item.LOGO_URL }
-  }).filter((item) => item.symbol.startsWith(userInput.value.toUpperCase())).slice(0, 4)
+  return allTickers.map((item) => Object({ symbol: item.SYMBOL, name: item.NAME, logo: item.LOGO_URL }))
+    .filter((item) => item.symbol.startsWith(userInput.value.toUpperCase()))
+    .slice(0, 4)
 })
 
 const props = defineProps({
@@ -48,17 +48,13 @@ const handleSelectSuggestion = (suggest) => {
   addTicker()
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   try {
     loading.value = true
-    const response = await fetch(
-      `https://data-api.coindesk.com/asset/v1/summary/list?asset_lookup_priority=SYMBOL&api_key=${apiKey}`
-    );
-    const data = await response.json();
 
-    allSymbols = data.Data.LIST;
-  } catch (err) {
-    console.log('API Error! ' + err);
+    const response = await getSuggestions()
+
+    allTickers = response.LIST
   } finally {
     loading.value = false
   }

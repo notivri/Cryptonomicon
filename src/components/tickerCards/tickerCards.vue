@@ -18,9 +18,9 @@ const emits = defineEmits(['deleteTicker', 'selectTicker'])
 
 <template>
   <div class="ticker-grid">
-    <TickerCard v-for="ticker in props.filteredTickers()" :key="ticker.name" :ticker="ticker"
+    <TickerCard v-for="ticker in props.filteredTickers()" :key="ticker.name" :ticker
       :selectedTicker="props.selectedTicker === ticker" @select="emits('selectTicker', $event)"
-      @delete="emits('deleteTicker', $event)" placeholder='a' />
+      @delete="emits('deleteTicker', $event)" />
   </div>
 </template>
 

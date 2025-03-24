@@ -4,7 +4,7 @@ import BaseButton from '@/shared/ui/baseButton.vue';
 
 const props = defineProps({
   filter: String,
-  currentPage: [Number, String],
+  currentPage: Number,
   hasNextPage: Boolean
 });
 
@@ -19,7 +19,8 @@ const emit = defineEmits(['update:filter', 'update:currentPage']);
       <BaseButton @click="emit('update:currentPage', props.currentPage - 1)" :disabled="props.currentPage <= 1">
         Назад
       </BaseButton>
-      <BaseButton @click="emit('update:currentPage', props.currentPage + 1)" :disabled="!hasNextPage">Вперед
+      <BaseButton @click="emit('update:currentPage', props.currentPage + 1)" :disabled="!hasNextPage">
+        Вперед
       </BaseButton>
     </div>
   </div>

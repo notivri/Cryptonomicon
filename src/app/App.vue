@@ -1,12 +1,13 @@
 <script setup>
 import './styles/main.css'
+
 import { onMounted, ref, watch } from 'vue';
+import { getTickerData } from '@/shared/api/api.js'
+
 import tickerInput from '@/components/tickerInput/tickerInput.vue';
 import tickerCards from '@/components/tickerCards/tickerCards.vue';
 import TickerGraph from '@/components/tickerGraph/tickerGraph.vue';
 import tickerFilter from '@/components/tickerFilter/tickerFilter.vue';
-
-const apiKey = import.meta.env.VITE_COINDESK_API_KEY;
 
 const filter = ref('')
 const tickers = ref([]);
@@ -15,9 +16,15 @@ const graphData = ref([]);
 const currentPage = ref(1)
 const hasNextPage = ref(false)
 
+const requestInterval = 7000
+const maxVisibleCards = 6
+const minNumberThreshold = 2
+const bigNumberRounding = 2
+const smallNumberRounding = 2
+
 const filteredTickers = () => {
-  const start = (currentPage.value - 1) * 6
-  const end = currentPage.value * 6
+  const start = (currentPage.value - 1) * maxVisibleCards
+  const end = currentPage.value * maxVisibleCards
   const filtered = tickers.value.filter((ticker) => ticker.name.startsWith(filter.value.toUpperCase()))
 
   hasNextPage.value = filtered.length > end
@@ -25,76 +32,44 @@ const filteredTickers = () => {
   return filtered.slice(start, end)
 }
 
-async function getTickerData(ticker) {
-  try {
-    const response = await fetch(`https://data-api.coindesk.com/index/cc/v1/latest/tick?market=ccix&instruments=${ticker.name}-USD&api_key=${apiKey}`);
+const updateTickers = () => {
+  tickers.value.forEach(async (ticker) => {
+    try {
+      const response = await getTickerData(ticker.name);
 
-    if (response.status == 404) {
-      alert(`${ticker.name} не найден!`)
-      handleDeleteTicker(ticker)
-      return
+      const newValue = response[`${ticker.name}-USD`].VALUE
+      const normalizedValue = newValue > minNumberThreshold ? newValue.toFixed(bigNumberRounding) : newValue.toPrecision(smallNumberRounding)
+
+      ticker.value = normalizedValue
+
+      if (selectedTicker.value == ticker) {
+        graphData.value.push(ticker.value)
+      }
+    } catch (error) {
+      if (error.response.status == 404) {
+        handleDeleteTicker(ticker)
+      }
     }
-
-    const data = await response.json();
-    const tickerValue = data.Data[`${ticker.name}-USD`].VALUE;
-
-    ticker.price = tickerValue > 2 ? tickerValue.toFixed(2) : tickerValue.toPrecision(2);
-
-    if (selectedTicker.value && selectedTicker.value.name == ticker.name) {
-      graphData.value.push(tickerValue);
-    }
-  } catch (err) {
-    console.error('API error: ', err);
-  }
-}
-
-function updateTickers() {
-  if (tickers.value.length > 0) {
-    tickers.value.forEach(ticker => {
-      getTickerData(ticker);
-    });
-
-    setTimeout(updateTickers, 7000);
-  }
+  });
 }
 
 function handleAddTicker(tickerName) {
   const newTicker = {
     name: tickerName,
-    price: '-'
+    value: '-'
   };
 
   tickers.value.push(newTicker);
   filter.value = ''
   localStorage.setItem("cryptonomicon-list", JSON.stringify(tickers.value));
-
-  if (tickers.value.length === 1) {
-    updateTickers();
-  }
-
-  const index = tickers.value.findIndex(ticker => ticker.name === tickerName);
-  const newPage = Math.floor(index / 6) + 1;
-
-  if (newPage !== currentPage.value) {
-    currentPage.value = newPage;
-  }
 }
 
 function handleDeleteTicker(ticker) {
   tickers.value = tickers.value.filter((toDeleteTicker) => ticker !== toDeleteTicker);
   localStorage.setItem("cryptonomicon-list", JSON.stringify(tickers.value))
 
-  if (tickers.value.length == 0) {
-    selectedTicker.value = null;
-    graphData.value = [];
-  }
-
   if (selectedTicker.value == ticker) {
     selectedTicker.value = false
-  }
-
-  if (!filteredTickers().length) {
-    currentPage.value--
   }
 }
 
@@ -107,6 +82,23 @@ function handleCloseGraph() {
   selectedTicker.value = null;
   graphData.value = [];
 }
+
+watch(tickers, () => {
+  if (tickers.value.length >= 1) {
+    setInterval(updateTickers, requestInterval)
+  }
+
+  if (tickers.value.length == 0) {
+    selectedTicker.value = null;
+    graphData.value = [];
+  }
+})
+
+watch(filteredTickers(), () => {
+  if (!filteredTickers().length) {
+    currentPage.value--
+  }
+})
 
 watch(filter, () => {
   currentPage.value = 1
@@ -140,11 +132,11 @@ onMounted(() => {
 
 <template>
   <div class="main-page">
-    <tickerInput @addTicker="handleAddTicker" :tickers="tickers" />
+    <tickerInput @addTicker="handleAddTicker" :tickers />
 
     <hr />
-    <tickerFilter :filter="filter" :currentPage="currentPage" :hasNextPage="hasNextPage"
-      @update:filter="filter = $event" @update:currentPage="currentPage = $event" />
+    <tickerFilter :filter :currentPage :hasNextPage @update:filter="filter = $event"
+      @update:currentPage="currentPage = $event" />
     <template v-if="filteredTickers().length > 0">
       <hr />
       <tickerCards @deleteTicker="handleDeleteTicker" @selectTicker="handleSelectTicker" :filteredTickers
@@ -152,7 +144,7 @@ onMounted(() => {
       <hr />
     </template>
 
-    <TickerGraph v-if="selectedTicker" :tickerName="selectedTicker.name" :graphData @closeGraph="handleCloseGraph" />
+    <TickerGraph v-if="selectedTicker" @closeGraph="handleCloseGraph" :tickerName="selectedTicker.name" :graphData />
   </div>
 </template>
 
