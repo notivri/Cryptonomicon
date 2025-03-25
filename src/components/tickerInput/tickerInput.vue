@@ -1,3 +1,19 @@
+<template>
+  <loadingScreen v-if="loading" />
+  <div class="ticker-input-container">
+    <span>Тикер</span>
+    <div class="input-block">
+      <baseInput v-model.trim="userInput" @keydown.enter="addTicker" placeholder="Код валюты" class="baseInput"
+        style="max-width: 100%;" />
+      <suggestionList :suggestions @selectSuggestion="handleSelectSuggestion" class="suggestionList" />
+      <span v-if="isExists" class="exists">Такой тикер уже существует!</span>
+    </div>
+    <baseButton class="addButton" @click="addTicker">
+      <addIcon /> Добавить
+    </baseButton>
+  </div>
+</template>
+
 <script setup>
 import { ref, computed, watch, nextTick, onBeforeMount, } from 'vue';
 import addIcon from '@/shared/icons/addIcon.vue';
@@ -6,7 +22,7 @@ import loadingScreen from './ui/loadingScreen.vue';
 import baseButton from '@/shared/ui/baseButton.vue';
 import baseInput from '@/shared/ui/baseInput.vue';
 import { loading, allTickers } from '@/entities/ticker';
-import { getSuggestions } from '@/shared/api/api';
+import { getSuggestions } from '@/entities/ticker/api/api';
 
 const userInput = ref('');
 const isExists = ref(false)
@@ -55,22 +71,6 @@ onBeforeMount(async () => {
   allTickers.value = await getSuggestions()
 })
 </script>
-
-<template>
-  <loadingScreen v-if="loading" />
-  <div class="ticker-input-container">
-    <span>Тикер</span>
-    <div class="input-block">
-      <baseInput v-model.trim="userInput" @keydown.enter="addTicker" placeholder="Код валюты" class="baseInput"
-        style="max-width: 100%;" />
-      <suggestionList :suggestions @selectSuggestion="handleSelectSuggestion" class="suggestionList" />
-      <span v-if="isExists" class="exists">Такой тикер уже существует!</span>
-    </div>
-    <baseButton class="addButton" @click="addTicker">
-      <addIcon /> Добавить
-    </baseButton>
-  </div>
-</template>
 
 <style scoped>
 .ticker-input-container {

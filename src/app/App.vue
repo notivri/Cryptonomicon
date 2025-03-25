@@ -1,3 +1,21 @@
+<template>
+  <div class="main-page">
+    <tickerInput @addTicker="handleAddTicker" :tickers />
+
+    <hr />
+    <tickerFilter :filter :currentPage :hasNextPage @update:filter="filter = $event"
+      @update:currentPage="currentPage = $event" />
+    <template v-if="filteredTickers().length > 0">
+      <hr />
+      <tickerCards @deleteTicker="handleDeleteTicker" @selectTicker="handleSelectTicker" :filteredTickers
+        :selectedTicker />
+      <hr />
+    </template>
+
+    <TickerGraph v-if="selectedTicker" @closeGraph="handleCloseGraph" :tickerName="selectedTicker.name" :graphData />
+  </div>
+</template>
+
 <script setup>
 import './styles/main.css';
 import { onMounted } from 'vue';
@@ -40,25 +58,6 @@ onMounted(() => {
   }
 });
 </script>
-
-
-<template>
-  <div class="main-page">
-    <tickerInput @addTicker="handleAddTicker" :tickers />
-
-    <hr />
-    <tickerFilter :filter :currentPage :hasNextPage @update:filter="filter = $event"
-      @update:currentPage="currentPage = $event" />
-    <template v-if="filteredTickers().length > 0">
-      <hr />
-      <tickerCards @deleteTicker="handleDeleteTicker" @selectTicker="handleSelectTicker" :filteredTickers
-        :selectedTicker />
-      <hr />
-    </template>
-
-    <TickerGraph v-if="selectedTicker" @closeGraph="handleCloseGraph" :tickerName="selectedTicker.name" :graphData />
-  </div>
-</template>
 
 <style scoped>
 .main-page {

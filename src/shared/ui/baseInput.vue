@@ -1,3 +1,8 @@
+  <template>
+    <input type="text" maxlength="15" autocomplete="off" @input="emits('update:modelValue', $event.target.value)"
+      :value="props.modelValue" />
+  </template>
+
 <script setup>
 const props = defineProps({
   modelValue: {
@@ -8,11 +13,6 @@ const props = defineProps({
 
 const emits = defineEmits(['update:modelValue']);
 </script>
-
-<template>
-  <input type="text" maxlength="15" autocomplete="off" @input="emits('update:modelValue', $event.target.value)"
-    :value="props.modelValue" />
-</template>
 
 <style scoped>
 input {

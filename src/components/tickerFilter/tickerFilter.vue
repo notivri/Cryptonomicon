@@ -1,16 +1,3 @@
-<script setup>
-import BaseInput from '@/shared/ui/baseInput.vue';
-import BaseButton from '@/shared/ui/baseButton.vue';
-
-const props = defineProps({
-  filter: String,
-  currentPage: Number,
-  hasNextPage: Boolean
-});
-
-const emit = defineEmits(['update:filter', 'update:currentPage']);
-</script>
-
 <template>
   <div class="filtered-container">
     <BaseInput type="text" :value="props.filter" @input="emit('update:filter', $event.target.value)"
@@ -25,6 +12,19 @@ const emit = defineEmits(['update:filter', 'update:currentPage']);
     </div>
   </div>
 </template>
+
+<script setup>
+import BaseInput from '@/shared/ui/baseInput.vue';
+import BaseButton from '@/shared/ui/baseButton.vue';
+
+const props = defineProps({
+  filter: String,
+  currentPage: Number,
+  hasNextPage: Boolean
+});
+
+const emit = defineEmits(['update:filter', 'update:currentPage']);
+</script>
 
 <style scoped>
 .filtered-container {

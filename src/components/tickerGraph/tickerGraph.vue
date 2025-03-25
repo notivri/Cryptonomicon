@@ -1,3 +1,17 @@
+<template>
+  <div class="graph-container">
+    <div class="graph-header">
+      <h3>{{ tickerName }} - USD</h3>
+      <button @click="emits('closeGraph')" class="close-button">
+        <close-button />
+      </button>
+    </div>
+    <div class="graph" ref="graph">
+      <div v-for="(bar, idx) in normalizedGraph()" :key="idx" class="bar" :style="{ height: bar + '%' }"></div>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import closeButton from '@/shared/icons/closeButton.vue';
 
@@ -22,20 +36,6 @@ function normalizedGraph() {
 }
 
 </script>
-
-<template>
-  <div class="graph-container">
-    <div class="graph-header">
-      <h3>{{ tickerName }} - USD</h3>
-      <button @click="emits('closeGraph')" class="close-button">
-        <close-button />
-      </button>
-    </div>
-    <div class="graph" ref="graph">
-      <div v-for="(bar, idx) in normalizedGraph()" :key="idx" class="bar" :style="{ height: bar + '%' }"></div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .graph-container {

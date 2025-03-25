@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue'
-import { getTickerData } from '@/shared/api/api.js'
+import { getTickerData } from '@/entities/ticker/api/api.js'
 
 const tickers = ref([])
 const selectedTicker = ref(null)
@@ -91,7 +91,6 @@ watch(tickers, () => {
 })
 
 export {
-  // \/ values \/
   tickers,
   selectedTicker,
   graphData,
@@ -101,7 +100,6 @@ export {
   loading,
   allTickers,
   maxGraphElements,
-  // \/ functions \/
   updateTickers,
   handleAddTicker,
   handleDeleteTicker,

@@ -1,3 +1,15 @@
+<template>
+  <div @click="emit('select', ticker)" :class="['ticker-card', { selected: props.selectedTicker }]">
+    <div class="card-header">
+      <dt>{{ props.ticker.name }} - USD</dt>
+      <dd>{{ props.ticker.value }}</dd>
+    </div>
+    <button @click.stop="emit('delete', props.ticker)" class="delete-button">
+      <DeleteIcon /> Удалить
+    </button>
+  </div>
+</template>
+
 <script setup>
 import DeleteIcon from '@/shared/icons/deleteIcon.vue';
 
@@ -15,18 +27,6 @@ const props = defineProps({
 
 const emit = defineEmits(['delete', 'select'])
 </script>
-
-<template>
-  <div @click="emit('select', ticker)" :class="['ticker-card', { selected: props.selectedTicker }]">
-    <div class="card-header">
-      <dt>{{ props.ticker.name }} - USD</dt>
-      <dd>{{ props.ticker.value }}</dd>
-    </div>
-    <button @click.stop="emit('delete', props.ticker)" class="delete-button">
-      <DeleteIcon /> Удалить
-    </button>
-  </div>
-</template>
 
 <style scoped>
 .ticker-card {
@@ -48,19 +48,19 @@ const emit = defineEmits(['delete', 'select'])
   flex-direction: column;
   padding: 2rem;
   gap: 1rem;
-}
 
-.card-header dt {
+
+ & dt {
   color: rgba(0, 0, 0, 0.418);
   font-size: 1rem;
   font-weight: 700;
 }
 
-.card-header dd {
+& dd {
   font-size: 2rem;
   font-weight: 500;
 }
-
+}
 .delete-button {
   all: unset;
   display: flex;
@@ -73,10 +73,11 @@ const emit = defineEmits(['delete', 'select'])
   background-color: whitesmoke;
   font-weight: 600;
   transition: background-color 0.2s;
-}
 
-.delete-button:hover {
+
+  &:hover {
   background-color: rgb(228, 228, 228);
+}
 }
 
 .selected {
