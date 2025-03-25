@@ -32,7 +32,7 @@ import {
   handleDeleteTicker,
   handleSelectTicker,
   handleCloseGraph,
-} from '@/entities/ticker.js';
+} from '@/entities/ticker/model/ticker.js';
 
 import tickerInput from '@/components/tickerInput/tickerInput.vue';
 import tickerCards from '@/components/tickerCards/tickerCards.vue';

@@ -13,7 +13,9 @@
 </template>
 
 <script setup>
+import { maxGraphElements } from '@/entities/ticker/model/ticker';
 import closeButton from '@/shared/icons/closeButton.vue';
+import { onMounted, useTemplateRef } from 'vue';
 
 const props = defineProps({
   graphData: {
@@ -35,6 +37,11 @@ function normalizedGraph() {
   return props.graphData.map((value) => ((value - minValue) * 100) / (maxValue - minValue));
 }
 
+const graphRef = useTemplateRef('graph')
+
+onMounted(() => {
+  maxGraphElements.value = graphRef.value.clientWidth / 32
+})
 </script>
 
 <style scoped>

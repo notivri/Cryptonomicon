@@ -21,7 +21,7 @@ import suggestionList from './ui/suggestionList.vue';
 import loadingScreen from './ui/loadingScreen.vue';
 import baseButton from '@/shared/ui/baseButton.vue';
 import baseInput from '@/shared/ui/baseInput.vue';
-import { loading, allTickers } from '@/entities/ticker';
+import { loading, allTickers } from '@/entities/ticker/model/ticker';
 import { getSuggestions } from '@/entities/ticker/api/api';
 
 const userInput = ref('');
