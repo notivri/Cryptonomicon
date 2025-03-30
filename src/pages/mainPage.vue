@@ -47,26 +47,41 @@
   const selectedTicker = ref(null)
   const tickerSuggestions = ref(null)
   const isExisted = ref(false)
-  const isPreviousPage = ref(false)
-  const isNextPage = ref(false)
   const currentPage = ref(1)
 
-  const paginatedTickers = () => {
-    const start = (currentPage.value - 1) * 6
-    const end = currentPage.value * 6
-    const filtered = tickers.value.filter((ticker) =>
-      ticker.symbol.startsWith(filterInput.value.toUpperCase())
-    )
-    isPreviousPage.value = filtered.length < end
-    isNextPage.value = filtered.length > end
+  const start = computed(() => {
+    return (currentPage.value - 1) * 6
+  })
+  const end = computed(() => {
+    return currentPage.value * 6
+  })
 
-    return filtered.slice(start, end)
-  }
+  const filtered = computed(() => {
+    return tickers.value.filter((t) =>
+      t.symbol.startsWith(filterInput.value.toUpperCase())
+    )
+  })
+
+  const isPreviousPage = computed(() => {
+    return filtered.value.length < end
+  })
+
+  const isNextPage = computed(() => {
+    return filtered.value.length > end
+  })
+
+  const paginatedTickers = computed(() => {
+    return filtered.value.slice(start.value, end.value)
+  })
 
   const addTicker = () => {
     if (!userInput.value) return
 
-    if (tickers.value.find((t) => t.symbol === userInput.value.toUpperCase())) {
+    if (
+      tickers.value.find(
+        (ticker) => ticker.symbol === userInput.value.toUpperCase()
+      )
+    ) {
       isExisted.value = true
       return
     }

@@ -1,7 +1,7 @@
 <template>
   <div class="tickerGrid">
     <div
-      v-for="(ticker, index) in props.paginatedTickers()"
+      v-for="(ticker, index) in props.paginatedTickers"
       :key="index"
       :class="['tickerCard', { selected: ticker === props.selectedTicker }]"
       @click="emit('selectTicker', ticker)"
@@ -22,7 +22,7 @@
 
   const props = defineProps({
     paginatedTickers: {
-      type: Function,
+      type: Object,
     },
     selectedTicker: {
       type: Object,

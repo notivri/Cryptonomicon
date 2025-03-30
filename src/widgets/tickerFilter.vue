@@ -1,6 +1,6 @@
 <template>
   <section class="filterSection">
-    <baseInput v-model="filterInput" />
+    <baseInput v-model="model" />
     <div class="buttonContainer">
       <baseButton
         id="backwardButton"
@@ -27,7 +27,7 @@
   import baseButton from "../shared/ui/baseButton.vue"
   import arrowIcon from "../shared/icons/arrowIcon.vue"
 
-  const filterInput = defineModel("filterInput")
+  const model = defineModel("filterInput")
 
   const props = defineProps({
     isPreviousPage: {
