@@ -1,21 +1,38 @@
 <template>
-  <svg class="animate-spin -ml-1 mr-3 h-12 w-12 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-    viewBox="0 0 24 24" width="48px" height="48px">
-    <circle class="inner" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-    <path class="outer" fill="currentColor"
-      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+  <svg
+    class="animate-spin -ml-1 mr-3 h-12 w-12 text-white"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    width="48px"
+    height="48px"
+  >
+    <circle
+      class="inner"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      stroke-width="4"
+    />
+    <path
+      class="outer"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+    >
+      >
     </path>
   </svg>
 </template>
 
 <style>
-.inner {
-  opacity: 0.25;
-  color: white;
-}
+  .inner {
+    opacity: 0.25;
+    color: white;
+  }
 
-.outer {
-  opacity: 0.75;
-  color: white;
-}
+  .outer {
+    opacity: 0.75;
+    color: white;
+  }
 </style>

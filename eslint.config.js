@@ -1,28 +1,40 @@
-import js from '@eslint/js'
-import pluginVue from 'eslint-plugin-vue'
-import globals from 'globals'
-import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
+import { defineConfig } from "eslint/config"
+import globals from "globals"
+import js from "@eslint/js"
+import pluginVue from "eslint-plugin-vue"
+import pluginPrettier from "eslint-plugin-prettier"
 
-export default [
+export default defineConfig([
+  { files: ["**/*.{js,mjs,cjs,vue}"] },
   {
-    name: 'app/files-to-lint',
-    files: ['**/*.{js,mjs,jsx,vue}'],
+    files: ["**/*.{js,mjs,cjs,vue}"],
+    languageOptions: { globals: globals.browser },
   },
-
   {
-    name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
+    files: ["**/*.{js,mjs,cjs,vue}"],
+    plugins: { js },
+    extends: ["js/recommended"],
   },
-
+  pluginVue.configs["flat/recommended"],
   {
+    files: ["**/*.vue", "**/*.js", "**/*.mjs", "**/*.cjs"],
+    plugins: { prettier: pluginPrettier },
+    rules: {
+      "prettier/prettier": ["error", { semi: false }],
+      "import/no-undef": "off",
+      "no-undef": "off",
+    },
+  },
+  {
+    rules: {
+      // override/add rules settings here, such as:
+      // 'vue/no-unused-vars': 'error'
+    },
     languageOptions: {
+      sourceType: "module",
       globals: {
         ...globals.browser,
       },
     },
   },
-
-  js.configs.recommended,
-  ...pluginVue.configs['flat/essential'],
-  skipFormatting,
-]
+])
