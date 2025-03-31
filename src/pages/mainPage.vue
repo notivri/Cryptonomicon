@@ -1,6 +1,6 @@
 <template>
   <loadingScreen v-if="loading" />
-  <main v-if="!loading" class="main">
+  <main v-else class="main">
     <tickerAdding
       v-model="userInput"
       :ticker-suggestions
@@ -49,29 +49,58 @@
   const isExisted = ref(false)
   const currentPage = ref(1)
 
+  const isPreviousPage = computed(() => {
+    return currentPage.value > 1
+  })
+
+  const isNextPage = computed(() => {
+    return currentPage.value * 6 < filtered.value.length
+  })
+
   const start = computed(() => {
     return (currentPage.value - 1) * 6
   })
+
   const end = computed(() => {
     return currentPage.value * 6
   })
 
   const filtered = computed(() => {
-    return tickers.value.filter((t) =>
-      t.symbol.startsWith(filterInput.value.toUpperCase())
+    return tickers.value.filter((ticker) =>
+      ticker.symbol.startsWith(filterInput.value.toUpperCase())
     )
-  })
-
-  const isPreviousPage = computed(() => {
-    return filtered.value.length < end
-  })
-
-  const isNextPage = computed(() => {
-    return filtered.value.length > end
   })
 
   const paginatedTickers = computed(() => {
     return filtered.value.slice(start.value, end.value)
+  })
+
+  watch(userInput, () => {
+    if (isExisted.value) isExisted.value = false
+  })
+
+  watch(filterInput, () => {
+    if (currentPage.value != 1) currentPage.value = 1
+  })
+
+  onMounted(() => {
+    interval = setInterval(updatePrices, 10000)
+  })
+
+  onUnmounted(() => {
+    clearInterval(interval)
+  })
+
+  onBeforeMount(async () => {
+    try {
+      loading.value = true
+      const response = await getSuggestions()
+      tickerSuggestions.value = response.LIST
+    } catch (error) {
+      console.error(error)
+    } finally {
+      loading.value = false
+    }
   })
 
   const addTicker = () => {
@@ -146,34 +175,6 @@
       }
     }
   }
-
-  watch(userInput, () => {
-    if (isExisted.value) isExisted.value = false
-  })
-
-  watch(filterInput, () => {
-    if (currentPage.value != 1) currentPage.value = 1
-  })
-
-  onMounted(() => {
-    interval = setInterval(updatePrices, 10000)
-  })
-
-  onUnmounted(() => {
-    clearInterval(interval)
-  })
-
-  onBeforeMount(async () => {
-    try {
-      loading.value = true
-      const response = await getSuggestions()
-      tickerSuggestions.value = response.LIST
-    } catch (error) {
-      console.error(error)
-    } finally {
-      loading.value = false
-    }
-  })
 </script>
 
 <style scoped>

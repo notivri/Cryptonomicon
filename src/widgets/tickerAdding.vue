@@ -1,5 +1,5 @@
 <template>
-  <div class="tickerAddingContainer">
+  <div class="tickerAdding">
     <label for="input">Тикер</label>
     <div class="inputWrapper">
       <baseInput
@@ -14,6 +14,7 @@
           :key="index"
           :title="suggestion.NAME"
           class="tickerSymbol"
+          :class="{ show: suggestedTickers }"
           @click="emit('addTicker', suggestion.SYMBOL)"
         >
           <img
@@ -40,7 +41,6 @@
   import baseButton from "../shared/ui/baseButton.vue"
   import addIcon from "../shared/icons/addIcon.vue"
 
-  const model = defineModel()
   const props = defineProps({
     tickerSuggestions: {
       type: Object,
@@ -49,6 +49,7 @@
       type: Boolean,
     },
   })
+  const model = defineModel()
   const emit = defineEmits(["addTicker"])
 
   const suggestedTickers = computed(() => {
@@ -61,7 +62,7 @@
 </script>
 
 <style scoped>
-  .tickerAddingContainer {
+  .tickerAdding {
     display: flex;
     position: relative;
     flex-direction: column;
@@ -88,10 +89,14 @@
       gap: 0.5rem;
       border-radius: 0 0 0.375rem 0.375rem;
       width: 20;
-
+      transform: translate(0, -1.5rem);
       padding: 0.5rem;
       padding-top: 1rem;
       transition: 0.5s transform;
+
+      & .show {
+        transform: translate(0, 0);
+      }
 
       .tickerLogo {
         border-radius: 100%;

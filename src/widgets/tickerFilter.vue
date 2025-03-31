@@ -27,7 +27,7 @@
   import baseButton from "../shared/ui/baseButton.vue"
   import arrowIcon from "../shared/icons/arrowIcon.vue"
 
-  const model = defineModel("filterInput")
+  const model = defineModel()
 
   const props = defineProps({
     isPreviousPage: {
