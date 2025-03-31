@@ -12,7 +12,6 @@ const getTickerData = async (ticker, currency = "USD") => {
 
     if (!response.ok) {
       if (response.status == 404) {
-        console.warn(`${ticker} не найден!`)
         return "404"
       }
 

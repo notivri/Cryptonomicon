@@ -80,12 +80,12 @@
     return filtered.value.slice(start.value, end.value)
   })
 
-  const addTicker = () => {
+  const addTicker = (toAddTicker = userInput.value) => {
     if (!userInput.value) return
 
     if (
       tickers.value.find(
-        (ticker) => ticker.symbol === userInput.value.toUpperCase()
+        (ticker) => ticker.symbol === toAddTicker.toUpperCase()
       )
     ) {
       isExisted.value = true
@@ -93,7 +93,7 @@
     }
 
     const newTicker = {
-      symbol: userInput.value.toUpperCase(),
+      symbol: toAddTicker.toUpperCase(),
       currency: "USD",
       price: "-",
     }
