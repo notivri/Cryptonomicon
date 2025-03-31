@@ -1,13 +1,10 @@
 <template>
   <svg
-    id="Layer_1"
     fill="#FFFFFF"
-    height="16px"
-    width="16px"
     version="1.1"
     viewBox="0 0 330 330"
     xml:space="preserve"
-    class="icon"
+    width="1rem"
   >
     <path
       id="XMLID_222_"

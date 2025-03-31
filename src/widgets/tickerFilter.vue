@@ -1,5 +1,5 @@
 <template>
-  <section class="filterSection">
+  <section class="tickerFilter">
     <baseInput v-model="model" />
     <div class="buttonContainer">
       <baseButton
@@ -42,7 +42,7 @@
 </script>
 
 <style scoped>
-  .filterSection {
+  .tickerFilter {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

@@ -1,11 +1,10 @@
 <template>
   <svg
-    class="animate-spin -ml-1 mr-3 h-12 w-12 text-white"
+    class="icon"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
-    width="48px"
-    height="48px"
+    width="2rem"
   >
     <circle
       class="inner"

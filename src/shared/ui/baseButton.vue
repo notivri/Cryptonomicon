@@ -9,6 +9,8 @@
     all: unset;
     display: flex;
     align-items: center;
+    width: fit-content;
+    height: fit-content;
     color: white;
     background-color: rgba(74, 85, 104, 1);
     font-weight: 500;

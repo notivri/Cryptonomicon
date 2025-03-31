@@ -8,13 +8,12 @@
         placeholder="Код Валюты"
         @keydown.enter="emit('addTicker')"
       />
-      <div class="suggestions">
+      <div :class="['suggestions', { show: suggestedTickers.length }]">
         <span
           v-for="(suggestion, index) in suggestedTickers"
           :key="index"
           :title="suggestion.NAME"
           class="tickerSymbol"
-          :class="{ show: suggestedTickers }"
           @click="emit('addTicker', suggestion.SYMBOL)"
         >
           <img
@@ -64,16 +63,10 @@
 <style scoped>
   .tickerAdding {
     display: flex;
-    position: relative;
     flex-direction: column;
     justify-content: start;
     align-items: start;
-    gap: 0.5rem;
-
-    & .inputWrapper {
-      display: inline-flex;
-      flex-direction: column;
-    }
+    gap: 1rem;
 
     & #existingMessage {
       color: red;
@@ -82,33 +75,37 @@
 
     & .suggestions {
       z-index: 1;
-      display: flex;
+      display: none;
       position: relative;
-      justify-content: flex-start;
-      background-color: white;
+      flex-direction: row;
       gap: 0.5rem;
-      border-radius: 0 0 0.375rem 0.375rem;
-      width: 20;
-      transform: translate(0, -1.5rem);
       padding: 0.5rem;
-      padding-top: 1rem;
-      transition: 0.5s transform;
+      background-color: white;
+      border-radius: 0.375rem;
 
-      & .show {
-        transform: translate(0, 0);
+      &.show {
+        display: flex;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
       }
 
-      .tickerLogo {
+      & .tickerLogo {
         border-radius: 100%;
+        transition: transform 0.2s;
+
+        &:hover {
+          transform: scale(2);
+        }
       }
 
       & .tickerSymbol {
         display: flex;
+        justify-content: center;
         align-items: center;
-        gap: 0.1rem;
+        text-align: center;
+        gap: 0.2rem;
         background-color: rgb(232, 243, 253);
         color: rgba(45, 55, 72, 1);
-        border-radius: 0.375rem;
+        border-radius: 0.25rem;
         padding: 0.2rem 0.5rem;
         cursor: pointer;
         font-size: 0.75rem;

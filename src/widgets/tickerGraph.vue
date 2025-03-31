@@ -106,7 +106,7 @@
     & .graph {
       margin-top: 1rem;
       width: 100%;
-      height: clamp(15rem, 50vh, 20rem);
+      height: clamp(15rem, 40vh, 20rem);
     }
   }
 </style>

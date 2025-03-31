@@ -46,14 +46,13 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      width: 100%;
-      max-width: 30rem;
-      min-width: 20rem;
       background-color: white;
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
       border-radius: 0.375rem;
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.3rem;
       cursor: pointer;
+      width: 20rem;
+      height: fit-content;
       box-sizing: border-box;
 
       & .cardHeader {
