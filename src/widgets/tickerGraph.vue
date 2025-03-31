@@ -9,12 +9,7 @@
       </button>
     </div>
     <div ref="graph" class="graph">
-      <div
-        v-for="(bar, index) in props.graphData"
-        :key="index"
-        :style="[{ height: bar + '%' }]"
-        class="bar"
-      />
+      <Line :options="chartOptions" :data="chartData" />
     </div>
   </div>
 </template>
@@ -22,10 +17,53 @@
 <script setup>
   import baseButton from "../shared/ui/baseButton.vue"
   import closeIcon from "../shared/icons/closeIcon.vue"
+  import { Line } from "vue-chartjs"
+  import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+  } from "chart.js"
+
+  ChartJS.register(
+    Title,
+    Tooltip,
+    Filler,
+    PointElement,
+    LineElement,
+    CategoryScale,
+    LinearScale
+  )
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+  }
+
+  const chartData = computed(() => {
+    return {
+      labels: props.graphData.map((data) => data[0]),
+      datasets: [
+        {
+          label: "BTC",
+          fill: true,
+          pointHitRadius: 10,
+          pointBackgroundColor: "rgba(85, 60, 154, 1)",
+          backgroundColor: "rgba(85, 60, 154, 0.5)",
+          borderColor: "rgba(85, 60, 154, 1)",
+          data: props.graphData.map((data) => data[1]),
+        },
+      ],
+    }
+  })
 
   const props = defineProps({
     graphData: {
-      type: Array,
+      type: Object,
     },
   })
   const emit = defineEmits(["closeGraph"])
@@ -63,25 +101,8 @@
     }
 
     & .graph {
-      border-left: 1px solid black;
-      border-bottom: 1px solid black;
-      margin-top: 1rem;
-      display: flex;
-      align-items: flex-end;
-      gap: 0.3rem;
-      padding: 0.2rem;
-      height: 20rem;
-      max-width: 100%;
-      overflow-x: hidden;
-
-      & .bar {
-        display: flex;
-        flex-wrap: nowrap;
-        min-width: 2rem;
-        max-width: calc(100% / 10);
-        min-height: 0.5rem;
-        background-color: rgba(85, 60, 154, 1);
-      }
+      width: 100%;
+      height: clamp(15rem, 50vh, 20rem);
     }
   }
 </style>

@@ -75,34 +75,6 @@
     return filtered.value.slice(start.value, end.value)
   })
 
-  watch(userInput, () => {
-    if (isExisted.value) isExisted.value = false
-  })
-
-  watch(filterInput, () => {
-    if (currentPage.value != 1) currentPage.value = 1
-  })
-
-  onMounted(() => {
-    interval = setInterval(updatePrices, 10000)
-  })
-
-  onUnmounted(() => {
-    clearInterval(interval)
-  })
-
-  onBeforeMount(async () => {
-    try {
-      loading.value = true
-      const response = await getSuggestions()
-      tickerSuggestions.value = response.LIST
-    } catch (error) {
-      console.error(error)
-    } finally {
-      loading.value = false
-    }
-  })
-
   const addTicker = () => {
     if (!userInput.value) return
 
@@ -153,28 +125,69 @@
   }
 
   const updatePrices = async () => {
-    for (const ticker of tickers.value) {
-      try {
+    try {
+      for (const ticker of tickers.value) {
         const response = await getTickerData(ticker.symbol)
 
-        if (response == "404") {
+        if (response === "404") {
           deleteTicker(ticker)
+          console.warn(`${ticker.symbol} не найден!`)
           return
         }
 
-        const tickerData = response[`${ticker.symbol}-USD`]
-        const newTickerPrice =
-          tickerData.VALUE > 2
-            ? tickerData.VALUE.toFixed(2)
-            : tickerData.VALUE.toPrecision(2)
-        ticker.price = newTickerPrice
+        const tickerData = response[`${ticker.symbol}-${ticker.currency}`]
+        const newTickerPrice = tickerData.VALUE
+        const normalisedTickerPrice =
+          newTickerPrice > 2
+            ? newTickerPrice.toFixed(2)
+            : newTickerPrice.toPrecision(2)
 
-        if (selectedTicker.value === ticker) graphData.value.push(ticker.price)
-      } catch (error) {
-        console.error(`Ошибка при обновлении цены для ${ticker.symbol}:`, error)
+        ticker.price = normalisedTickerPrice
+
+        if (selectedTicker.value === ticker) {
+          const minutes = new Date().getMinutes()
+          const seconds = new Date().getSeconds()
+
+          graphData.value = [
+            ...graphData.value,
+            [`${minutes}:${seconds}`, normalisedTickerPrice],
+          ]
+        }
+
+        if (graphData.value.length > 15) graphData.value.shift()
       }
+    } catch (error) {
+      console.error(`Error on update ticker: ${error}`)
     }
   }
+
+  watch(userInput, () => {
+    if (isExisted.value) isExisted.value = false
+  })
+
+  watch(filterInput, () => {
+    currentPage.value = 1
+  })
+
+  onBeforeMount(async () => {
+    try {
+      loading.value = true
+      const response = await getSuggestions()
+      tickerSuggestions.value = response.LIST
+    } catch (error) {
+      console.error(error)
+    } finally {
+      loading.value = false
+    }
+  })
+
+  onMounted(() => {
+    interval = setInterval(updatePrices, 10000)
+  })
+
+  onUnmounted(() => {
+    clearInterval(interval)
+  })
 </script>
 
 <style scoped>
