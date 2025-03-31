@@ -1,7 +1,7 @@
 <template>
   <div class="graph-container">
     <div class="graph-header">
-      <h3>something - USD</h3>
+      <h3>{{ props.selectedTicker.symbol }} - USD</h3>
       <button class="close-button">
         <baseButton id="close-button">
           <closeIcon @click="emit('closeGraph')" />
@@ -65,6 +65,9 @@
     graphData: {
       type: Object,
     },
+    selectedTicker: {
+      type: Object,
+    },
   })
   const emit = defineEmits(["closeGraph"])
 </script>
@@ -101,6 +104,7 @@
     }
 
     & .graph {
+      margin-top: 1rem;
       width: 100%;
       height: clamp(15rem, 50vh, 20rem);
     }

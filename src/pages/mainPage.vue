@@ -24,7 +24,12 @@
         @select-ticker="selectTicker"
       />
       <hr />
-      <tickerGraph v-if="selectedTicker" :graphData @close-graph="closeGraph" />
+      <tickerGraph
+        v-if="selectedTicker"
+        :graph-data
+        :selected-ticker
+        @close-graph="closeGraph"
+      />
     </template>
   </main>
 </template>
