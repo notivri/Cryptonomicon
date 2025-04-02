@@ -1,10 +1,11 @@
 <template>
   <svg
+    width="1rem"
+    height="1rem"
     fill="#FFFFFF"
     version="1.1"
     viewBox="0 0 330 330"
     xml:space="preserve"
-    width="1rem"
   >
     <path
       id="XMLID_222_"

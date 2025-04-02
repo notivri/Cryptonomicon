@@ -201,6 +201,12 @@
     margin: 0.1rem;
     padding: 0.5rem;
 
+    & .userInputWrapper {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
     & hr {
       margin: 1rem;
       border: 0.1rem solid rgba(0, 0, 0, 0.5);

@@ -5,8 +5,6 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:svgjs="http://svgjs.com/svgjs"
     version="1.1"
-    x="0"
-    y="0"
     viewBox="0 0 511.76 511.76"
     style="enable-background: new 0 0 512 512"
     xml:space="preserve"

@@ -1,18 +1,20 @@
 <template>
-  <div class="tickerGrid">
-    <div
-      v-for="(ticker, index) in props.paginatedTickers"
-      :key="index"
-      :class="['tickerCard', { selected: ticker === props.selectedTicker }]"
-      @click="emit('selectTicker', ticker)"
-    >
-      <div class="cardHeader">
-        <dt>{{ ticker.symbol }} - {{ ticker.currency }}</dt>
-        <dd>{{ ticker.price }}</dd>
+  <div class="wrapper">
+    <div class="tickerGrid">
+      <div
+        v-for="(ticker, index) in props.paginatedTickers"
+        :key="index"
+        :class="['tickerCard', { selected: ticker === props.selectedTicker }]"
+        @click="emit('selectTicker', ticker)"
+      >
+        <div class="cardHeader">
+          <dt>{{ ticker.symbol }} - {{ ticker.currency }}</dt>
+          <dd>{{ ticker.price }}</dd>
+        </div>
+        <button id="deleteButton" @click.stop="emit('deleteTicker', ticker)">
+          <deleteIcon />Удалить
+        </button>
       </div>
-      <button id="deleteButton" @click.stop="emit('deleteTicker', ticker)">
-        <deleteIcon />Удалить
-      </button>
     </div>
   </div>
 </template>
@@ -34,15 +36,14 @@
 
 <style scoped>
   .tickerGrid {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
+    justify-content: center;
 
     & .tickerCard {
       display: flex;
-      justify-self: center;
+      flex: auto;
       flex-direction: column;
       align-items: center;
       text-align: center;
@@ -51,10 +52,10 @@
       border-radius: 0.375rem;
       padding-bottom: 0.3rem;
       cursor: pointer;
-      width: 20rem;
       height: fit-content;
       box-sizing: border-box;
-
+      min-width: 20rem;
+      max-width: 25rem;
       & .cardHeader {
         display: flex;
         flex-direction: column;
@@ -81,6 +82,7 @@
       justify-content: center;
       padding-top: 1rem;
       padding-bottom: 1rem;
+      gap: 0.225rem;
       width: 100%;
       color: rgba(113, 128, 150, 1);
       background-color: whitesmoke;
