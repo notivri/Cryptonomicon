@@ -43,7 +43,6 @@
   import tickerGraph from "../widgets/tickerGraph.vue"
 
   let interval = null
-
   const loading = ref(true)
   const tickers = ref([])
   const graphData = ref([])
@@ -121,13 +120,9 @@
     graphData.value = []
   }
 
-  const nextPage = () => {
-    currentPage.value++
-  }
+  const nextPage = () => currentPage.value++
 
-  const previousPage = () => {
-    currentPage.value--
-  }
+  const previousPage = () => currentPage.value--
 
   const updatePrices = async () => {
     try {
@@ -167,7 +162,7 @@
   }
 
   watch(userInput, () => {
-    if (isExisted.value) isExisted.value = false
+    isExisted.value = false
   })
 
   watch(filterInput, () => {

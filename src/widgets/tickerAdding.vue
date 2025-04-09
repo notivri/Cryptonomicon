@@ -1,6 +1,6 @@
 <template>
   <div class="tickerAdding">
-    <label for="input">Тикер</label>
+    <span class="label">Тикер</span>
     <div class="inputWrapper">
       <baseInput
         id="input"
@@ -61,12 +61,16 @@
 </script>
 
 <style scoped>
+  .label {
+    font-weight: 600;
+  }
+
   .tickerAdding {
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: start;
-    gap: 1rem;
+    gap: 0.5rem;
 
     & #existingMessage {
       color: red;

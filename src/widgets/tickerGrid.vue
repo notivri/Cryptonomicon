@@ -1,20 +1,18 @@
 <template>
-  <div class="wrapper">
-    <div class="tickerGrid">
-      <div
-        v-for="(ticker, index) in props.paginatedTickers"
-        :key="index"
-        :class="['tickerCard', { selected: ticker === props.selectedTicker }]"
-        @click="emit('selectTicker', ticker)"
-      >
-        <div class="cardHeader">
-          <dt>{{ ticker.symbol }} - {{ ticker.currency }}</dt>
-          <dd>{{ ticker.price }}</dd>
-        </div>
-        <button id="deleteButton" @click.stop="emit('deleteTicker', ticker)">
-          <deleteIcon />Удалить
-        </button>
+  <div class="tickerGrid">
+    <div
+      v-for="(ticker, index) in props.paginatedTickers"
+      :key="index"
+      :class="['tickerCard', { selected: ticker === props.selectedTicker }]"
+      @click="emit('selectTicker', ticker)"
+    >
+      <div class="cardHeader">
+        <dt>{{ ticker.symbol }} - {{ ticker.currency }}</dt>
+        <dd>{{ ticker.price }}</dd>
       </div>
+      <button id="deleteButton" @click.stop="emit('deleteTicker', ticker)">
+        <deleteIcon />Удалить
+      </button>
     </div>
   </div>
 </template>
@@ -36,14 +34,24 @@
 
 <style scoped>
   .tickerGrid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: 0.5rem;
-    justify-content: center;
+    grid-template-columns: repeat(3, minmax(20rem, 1fr));
+    place-self: center;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(2, minmax(20rem, 1fr));
+    }
+    @media (max-width: 800px) {
+      grid-template-columns: repeat(1, minmax(20rem, 1fr));
+
+      & .tickerCard {
+        width: 100%;
+      }
+    }
 
     & .tickerCard {
       display: flex;
-      flex: auto;
       flex-direction: column;
       align-items: center;
       text-align: center;
@@ -54,8 +62,12 @@
       cursor: pointer;
       height: fit-content;
       box-sizing: border-box;
-      min-width: 20rem;
-      max-width: 25rem;
+      width: 20rem;
+
+      @media (max-width: 800px) {
+        width: 25rem;
+      }
+
       & .cardHeader {
         display: flex;
         flex-direction: column;
