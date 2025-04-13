@@ -99,6 +99,7 @@
 
     tickers.value.push(newTicker)
     userInput.value = ""
+    localStorage.setItem("tickers", JSON.stringify(tickers.value))
   }
 
   const deleteTicker = (toDeleteTicker) => {
@@ -108,6 +109,7 @@
       selectedTicker.value = null
       graphData.value = []
     }
+    localStorage.setItem("tickers", JSON.stringify(tickers.value))
   }
 
   const selectTicker = (ticker) => {
@@ -182,6 +184,9 @@
   })
 
   onMounted(() => {
+    const tickersData = localStorage.getItem("tickers")
+    if (tickersData) tickers.value = JSON.parse(tickersData)
+
     interval = setInterval(updatePrices, 10000)
   })
 
@@ -194,7 +199,7 @@
   .main {
     background-color: whitesmoke;
     margin: 0.1rem;
-    padding: 0.5rem;
+    padding: 1rem;
 
     & .userInputWrapper {
       display: flex;
