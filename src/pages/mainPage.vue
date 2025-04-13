@@ -100,6 +100,7 @@
     tickers.value.push(newTicker)
     userInput.value = ""
     filterInput.value = ""
+
     localStorage.setItem("tickers", JSON.stringify(tickers.value))
   }
 
@@ -173,6 +174,8 @@
       params.delete("filter")
     }
 
+    params.set("page", currentPage.value)
+
     if (selectedTicker.value) {
       params.set("selected", selectedTicker.value.symbol)
     } else {
@@ -199,6 +202,10 @@
     updateURL()
   })
 
+  watch(currentPage, () => {
+    updateURL()
+  })
+
   onBeforeMount(async () => {
     try {
       loading.value = true
@@ -219,6 +226,9 @@
 
     const filterData = params.get("filter")
     if (filterData) filterInput.value = filterData
+
+    const pageData = params.get("page")
+    if (pageData) currentPage.value = pageData
 
     const selectedTickerData = params.get("selected")
     if (selectedTickerData) {
