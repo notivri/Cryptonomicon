@@ -80,7 +80,7 @@
   })
 
   const addTicker = (toAddTicker = userInput.value) => {
-    if (!userInput.value) return
+    if (!toAddTicker) return
 
     if (
       tickers.value.find(
@@ -163,12 +163,43 @@
     }
   }
 
+  const updateURL = () => {
+    const params = new URLSearchParams(window.location.search)
+
+    if (filterInput.value) {
+      params.set("filter", filterInput.value)
+    } else {
+      params.delete("filter")
+    }
+
+    if (selectedTicker.value) {
+      params.set("selected", selectedTicker.value.symbol)
+    } else {
+      params.delete("selected")
+    }
+
+    window.history.replaceState(
+      {},
+      "",
+      `${window.location.pathname}?${params.toString()}`
+    )
+  }
+
+  watch(tickers, () => {
+    filterInput.value = ""
+  })
+
   watch(userInput, () => {
     isExisted.value = false
   })
 
   watch(filterInput, () => {
     currentPage.value = 1
+    updateURL()
+  })
+
+  watch(selectedTicker, () => {
+    updateURL()
   })
 
   onBeforeMount(async () => {
@@ -186,6 +217,19 @@
   onMounted(() => {
     const tickersData = localStorage.getItem("tickers")
     if (tickersData) tickers.value = JSON.parse(tickersData)
+
+    const params = new URLSearchParams(window.location.search)
+
+    const filterData = params.get("filter")
+    if (filterData) filterInput.value = filterData
+
+    const selectedTickerData = params.get("selected")
+    if (selectedTickerData) {
+      const selected = tickers.value.find(
+        (ticker) => ticker.symbol == selectedTickerData
+      )
+      selectedTicker.value = selected
+    }
 
     interval = setInterval(updatePrices, 10000)
   })
