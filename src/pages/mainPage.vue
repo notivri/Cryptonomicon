@@ -53,6 +53,10 @@
   const isExisted = ref(false)
   const currentPage = ref(1)
 
+  const totalPages = computed(() => {
+    return Math.ceil(filtered.value.length / 6)
+  })
+
   const isPreviousPage = computed(() => {
     return currentPage.value > 1
   })
@@ -100,6 +104,7 @@
     tickers.value.push(newTicker)
     userInput.value = ""
     filterInput.value = ""
+    currentPage.value = totalPages.value
 
     localStorage.setItem("tickers", JSON.stringify(tickers.value))
   }
@@ -111,6 +116,10 @@
       selectedTicker.value = null
       graphData.value = []
     }
+
+    if (!paginatedTickers.value.length) previousPage()
+    console.log(paginatedTickers.value)
+
     localStorage.setItem("tickers", JSON.stringify(tickers.value))
   }
 
