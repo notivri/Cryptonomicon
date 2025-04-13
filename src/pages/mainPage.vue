@@ -99,6 +99,7 @@
 
     tickers.value.push(newTicker)
     userInput.value = ""
+    filterInput.value = ""
     localStorage.setItem("tickers", JSON.stringify(tickers.value))
   }
 
@@ -184,10 +185,6 @@
       `${window.location.pathname}?${params.toString()}`
     )
   }
-
-  watch(tickers, () => {
-    filterInput.value = ""
-  })
 
   watch(userInput, () => {
     isExisted.value = false
